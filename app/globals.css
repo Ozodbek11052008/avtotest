@@ -1,0 +1,874 @@
+* {
+    margin: 0;
+    padding: 0;
+
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgb(106, 31, 228);
+    z-index: 1000;
+    font-size: 45px;
+    font-family: "conthrax-semibold";
+}
+
+.imtihon-container {
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    display: none;
+}
+
+.imtihon-button {
+    position: absolute;
+    right: 0px;
+    top: 50px;
+    background-color: red;
+    color: white;
+    padding: 7px 9px;
+    border-radius: 10px;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.back-imtihon-question {
+    width: 240px !important;
+    position: absolute;
+    top: 10px;
+    left: 5%;
+    backdrop-filter: blur(4px);
+    background: hsla(0, 0%, 100%, .1);
+    border-radius: 11px;
+    border: 1px solid hsla(0, 0%, 100%, .1);
+    color: #fff;
+    padding: 10px 20px;
+    margin-top: 40px;
+    font-family: "conthrax-semibold";
+    cursor: pointer;
+    display: none;
+}
+
+.modal-content {
+    margin: 15% auto;
+    padding: 20px;
+    border-radius: 5px;
+    width: 70%;
+
+    text-align: center;
+}
+
+.modal-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.imtihon-item {
+    width: 240px;
+    height: 240px;
+    background: teal;
+    border-radius: 20px;
+    font-size: 44px;
+    font-family: "conthrax-semibold";
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    justify-content: center;
+    color: #fff;
+
+}
+
+@font-face {
+    font-family: 'conthrax-semibold';
+    font-weight: 600;
+    font-style: normal;
+    src: url('/conthrax-semibold.otf');
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    background: #070A29;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+#content {
+    width: 90%;
+    color: #fff;
+    font-family: "conthrax-semibold";
+    /* height: 80vh; */
+}
+
+.question {
+    width: 100%;
+    height: auto;
+
+
+}
+
+.question div {
+    width: 100%;
+    margin-bottom: 46px;
+    font-size: 14px;
+}
+
+.question img {
+
+    height: 420px !important;
+    max-height: 420px !important;
+    border-radius: 10px;
+    border: 2px solid white;
+    top: 100px !important;
+    right: 0;
+}
+
+#questionOraliq img {
+    top: unset;
+
+}
+
+.question-image {
+    margin-top: -240px;
+}
+
+.question>.answer:nth-child(1) {
+    margin-top: 50px;
+}
+
+#topic-headline {
+    display: none;
+}
+
+
+.question .answer {
+    width: 50%;
+    height: 100%;
+}
+
+#content {
+    position: relative;
+}
+
+.answer:hover {
+    background: #272710;
+}
+
+#answers {
+    width: 100%;
+
+}
+
+#percentageDisplay {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 12px;
+    font-family: "conthrax-semibold";
+    color: #fff;
+}
+
+.hidden {
+    display: none;
+}
+
+#percentageDisplay.low-percentage {
+    color: red;
+    /* Red color for percentages less than 90% */
+}
+
+.chapters,
+.topics {
+    margin-bottom: 20px;
+    display: flex;
+}
+
+.chapters {
+    display: none;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+}
+
+.chapters button.home-button {
+    width: 70%;
+    margin-top: 50px;
+}
+
+.answer.correct-answer {
+    background-color: #90ee90;
+    /* Light green for correct */
+}
+
+.answer.incorrect-answer {
+    background-color: #ffcccb;
+    /* Light red for incorrect */
+}
+
+.topics {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 80px;
+    align-items: center;
+    justify-content: center;
+}
+
+.test-box.active {
+    background-color: gray;
+    /* Gray for the current question */
+    color: white;
+}
+
+.nav-box.active {
+    background-color: gray;
+    /* Gray for the current question */
+    color: white;
+}
+
+#chapter-headline {
+    color: #fff;
+    position: absolute;
+    top: 80px;
+    font-family: "conthrax-semibold";
+    font-size: 33px;
+    left: 0;
+    text-align: center;
+    width: 100%;
+    margin: auto;
+    margin-top: 30px;
+    top: -300px;
+    display: none;
+}
+
+.chapter-button,
+.Oraliq-chapter-button {
+    margin: 5px;
+    width: 300px;
+    font-size: 34px;
+    height: 300px;
+    background: linear-gradient(89.96deg, hsla(0, 0%, 100%, .05) .03%, hsla(0, 0%, 100%, .008) 49.67%, hsla(0, 0%, 100%, .05) 99.96%);
+    border: 1px solid;
+    border-image: linear-gradient(89.96deg, hsla(0, 0%, 100%, .05) .03%, hsla(0, 0%, 100%, .008) 49.67%, hsla(0, 0%, 100%, .05) 99.96%);
+    border-image-slice: 1;
+    font-family: "conthrax-semibold";
+    cursor: pointer;
+    color: #fff;
+}
+
+#Oraliqchapters {
+    position: absolute;
+    display: flex;
+    top: 15%;
+}
+
+.home-button {
+    width: 240px !important;
+    position: absolute;
+    top: 10px;
+    left: 5%;
+    backdrop-filter: blur(4px);
+    background: hsla(0, 0%, 100%, .1);
+    border-radius: 11px;
+    border: 1px solid hsla(0, 0%, 100%, .1);
+    color: #fff;
+    padding: 10px 20px;
+    margin-top: 40px;
+    font-family: "conthrax-semibold";
+    cursor: pointer;
+    display: none;
+}
+
+.main-home {
+    width: 240px !important;
+    position: absolute;
+    top: 10px;
+    left: 5%;
+    backdrop-filter: blur(4px);
+    background: hsla(0, 0%, 100%, .1);
+    border-radius: 11px;
+    border: 1px solid hsla(0, 0%, 100%, .1);
+    color: #fff;
+    padding: 10px 20px;
+    margin-top: 40px;
+    font-family: "conthrax-semibold";
+    cursor: pointer;
+    display: none;
+}
+
+.back-oraliq-chapter {
+    width: 240px !important;
+    position: absolute;
+    top: 10px;
+    left: 5%;
+    backdrop-filter: blur(4px);
+    background: hsla(0, 0%, 100%, .1);
+    border-radius: 11px;
+    border: 1px solid hsla(0, 0%, 100%, .1);
+    color: #fff;
+    padding: 10px 20px;
+    margin-top: 40px;
+    font-family: "conthrax-semibold";
+    cursor: pointer;
+    display: none;
+}
+
+.toggleModeButton {
+    width: 350px !important;
+    position: absolute;
+    top: 10px;
+    right: 10%;
+    backdrop-filter: blur(4px);
+    background: hsla(0, 0%, 100%, .1);
+    border-radius: 11px;
+    border: 1px solid hsla(0, 0%, 100%, .1);
+    color: #fff;
+    padding: 10px 20px;
+    margin-top: 40px;
+    font-family: "conthrax-semibold";
+    cursor: pointer;
+    display: none;
+}
+
+.back-button {
+    position: absolute;
+    top: 10px;
+    left: 5%;
+    backdrop-filter: blur(4px);
+    background: hsla(0, 0%, 100%, .1);
+    border-radius: 11px;
+    border: 1px solid hsla(0, 0%, 100%, .1);
+    color: #fff;
+    padding: 10px 20px;
+    margin-top: 40px;
+    font-family: "conthrax-semibold";
+    cursor: pointer;
+
+    width: 200px;
+}
+
+.appear {
+
+    display: block !important;
+}
+
+.disappear {
+    display: none !important;
+}
+
+.back-oraliq-question {
+    position: absolute;
+    top: 10px;
+    left: 5%;
+    backdrop-filter: blur(4px);
+    background: hsla(0, 0%, 100%, .1);
+    border-radius: 11px;
+    border: 1px solid hsla(0, 0%, 100%, .1);
+    color: #fff;
+    padding: 10px 20px;
+    margin-top: 40px;
+    font-family: "conthrax-semibold";
+    cursor: pointer;
+    display: none;
+    width: 200px;
+}
+
+.back-test-question,
+.back-test-question {
+    position: absolute;
+    top: 10px;
+    left: 5%;
+    backdrop-filter: blur(4px);
+    background: hsla(0, 0%, 100%, .1);
+    border-radius: 11px;
+    border: 1px solid hsla(0, 0%, 100%, .1);
+    color: #fff;
+    padding: 10px 20px;
+    margin-top: 40px;
+    font-family: "conthrax-semibold";
+    cursor: pointer;
+    display: none;
+    width: 200px;
+}
+
+.navigation {
+    display: none;
+}
+
+.test-box.incorrect {
+    background-color: red;
+    color: white;
+}
+
+.chapter-button.active,
+.topic-button.active {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.question {
+    font-size: 1.5em;
+    margin-bottom: 40px;
+}
+
+.question img {
+    max-width: 100%;
+    height: auto;
+}
+
+.answer {
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    display: flex;
+    margin-top: 40px;
+}
+
+.answer span.option-label {
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    background: darkblue;
+    margin-right: 30px;
+    text-align: center;
+}
+
+.answer span {
+    display: flex;
+    align-items: center;
+}
+
+.answer span:nth-child(2) {
+    width: 100%;
+    padding: 5px;
+}
+
+.answer.selected {
+    background-color: #d4edda;
+}
+
+.answer.correct {
+    background-color: #d4edda;
+    /* Green for correct answer */
+}
+
+.answer.incorrect {
+    background-color: #f8d7da;
+    /* Red for incorrect answer */
+}
+
+.result {
+    margin-top: 20px;
+    font-weight: bold;
+}
+
+.navigation {
+    margin-top: 20px;
+}
+
+.main-items {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+    width: 90%;
+    align-items: center;
+    height: 100vh;
+}
+
+.item {
+    backdrop-filter: blur(4px);
+    background: linear-gradient(89.96deg, hsla(0, 0%, 100%, .05) .03%, hsla(0, 0%, 100%, .008) 49.67%, hsla(0, 0%, 100%, .05) 99.96%);
+    border: 1px solid hsla(0, 0%, 100%, .1);
+    border-radius: 26px;
+    color: #fff;
+    width: 300px;
+    height: 300px;
+    text-align: center;
+    display: flex;
+    font-size: 33px;
+    align-items: center;
+    justify-content: center;
+    font-family: "conthrax-semibold";
+    cursor: pointer;
+}
+
+.action-btn {
+    backdrop-filter: blur(4px);
+    background: linear-gradient(89.96deg, hsla(0, 0%, 100%, .05) .03%, hsla(0, 0%, 100%, .008) 49.67%, hsla(0, 0%, 100%, .05) 99.96%);
+    border: 1px solid hsla(0, 0%, 100%, .1);
+    border-radius: 10px;
+    color: #fff;
+    margin-top: 10px;
+    margin-left: 20px;
+    padding: 20px 5px;
+    cursor: pointer;
+}
+
+.action-btn span {
+    background: linear-gradient(264.28deg, #dec7ff -38.2%, #5c27fe 103.12%);
+    border-radius: 10px;
+    padding: 16px 25px;
+    color: #fff;
+    font-family: "conthrax-semibold";
+}
+
+#test-navigation {
+    display: flex;
+    gap: 10px;
+    margin-top: 100px !important;
+    flex-wrap: wrap;
+    bottom: 0;
+    align-items: center;
+    justify-content: center;
+}
+
+.test-box {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    padding: 7px;
+    border-radius: 5px;
+
+}
+
+.back-variant-group,
+.back-variant-question {
+    position: absolute;
+    top: 10px;
+    left: 5%;
+    backdrop-filter: blur(4px);
+    background: hsla(0, 0%, 100%, .1);
+    border-radius: 11px;
+    border: 1px solid hsla(0, 0%, 100%, .1);
+    color: #fff;
+    padding: 10px 20px;
+    margin-top: 40px;
+    font-family: "conthrax-semibold";
+    cursor: pointer;
+    display: none;
+    width: 200px;
+}
+
+.test-box.correct {
+    background-color: green !important;
+    color: white;
+}
+
+@media(max-width:470px) {
+    .language-switcher {
+        margin-top: 90px !important;
+    }
+
+    .toggleModeButton {
+        margin-top: 80px;
+        right: 0 !important;
+        left: 5%;
+    }
+
+    #Oraliqchapters {
+        margin-top: 50px;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .timer {
+        top: 220px !important;
+    }
+
+    .variant {
+        z-index: 999;
+    }
+}
+
+.language-switcher {
+    margin-top: 60px;
+}
+
+.correct-answer {
+    background: #4CAF50 !important;
+}
+
+.nav-container {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+.nav-container .nav-box {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+    color: #fff;
+    font-family: "conthrax-semibold";
+}
+
+.timer {
+    position: absolute;
+    top: 170px;
+    font-size: 30px;
+    font-family: "conthrax-semibold";
+    color: #fff;
+}
+
+.nav-button {
+    background: none;
+    display: none !important;
+    border: 1px solid lightblue;
+    color: lightblue;
+    font-family: "conthrax-semibold";
+    padding: 10px 20px;
+    margin-left: 15px;
+    cursor: pointer;
+    transform: translateY(-200px);
+}
+
+.button-container,
+.button-container-test,
+.button-container-group {
+    display: flex;
+    position: absolute;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    top: 180px;
+    flex-wrap: wrap;
+}
+
+.group-button {
+    background: none;
+    color: lightblue;
+    font-family: "conthrax-semibold";
+    padding: 10px;
+    border: 1px solid lightblue;
+    cursor: pointer;
+}
+
+.incorrect-answer {
+    background: red !important;
+}
+
+.incorrect {
+    background: red !important;
+}
+
+.selected {
+    background: #dec7ff;
+}
+
+.correct {
+    background: green !important;
+}
+
+.language-switcher button {
+    border: 1px solid lightpink;
+    background: none;
+    color: lightpink;
+    padding: 10px 20px;
+    margin: 30px 2px;
+    cursor: pointer;
+    font-family: "conthrax-semibold";
+}
+
+:root {
+    --shiny-cta-bg: #000000;
+    --shiny-cta-bg-subtle: #1a1818;
+    --shiny-cta-fg: #ffffff;
+    --shiny-cta-highlight: blue;
+    --shiny-cta-highlight-subtle: #8484ff;
+}
+
+@property --gradient-angle {
+    syntax: "<angle>";
+    initial-value: 0deg;
+    inherits: false;
+}
+
+@property --gradient-angle-offset {
+    syntax: "<angle>";
+    initial-value: 0deg;
+    inherits: false;
+}
+
+@property --gradient-percent {
+    syntax: "<percentage>";
+    initial-value: 5%;
+    inherits: false;
+}
+
+@property --gradient-shine {
+    syntax: "<color>";
+    initial-value: white;
+    inherits: false;
+}
+
+.shiny-cta {
+    --animation: gradient-angle linear infinite;
+    --duration: 3s;
+    --shadow-size: 2px;
+    isolation: isolate;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    outline-offset: 4px;
+    padding: 1.25rem 2.5rem;
+    font-family: "conthrax-semibold";
+    margin-top: 100px;
+    font-size: 1.125rem;
+    line-height: 1.2;
+    border: 1px solid transparent;
+    border-radius: 360px;
+    color: var(--shiny-cta-fg);
+    background: linear-gradient(var(--shiny-cta-bg), var(--shiny-cta-bg)) padding-box,
+        conic-gradient(from calc(var(--gradient-angle) - var(--gradient-angle-offset)),
+            transparent,
+            var(--shiny-cta-highlight) var(--gradient-percent),
+            var(--gradient-shine) calc(var(--gradient-percent) * 2),
+            var(--shiny-cta-highlight) calc(var(--gradient-percent) * 3),
+            transparent calc(var(--gradient-percent) * 4)) border-box;
+    box-shadow: inset 0 0 0 1px var(--shiny-cta-bg-subtle);
+
+    &::before,
+    &::after,
+    span::before {
+        content: "";
+        pointer-events: none;
+        position: absolute;
+        inset-inline-start: 50%;
+        inset-block-start: 50%;
+        translate: -50% -50%;
+        z-index: -1;
+    }
+
+    &:active {
+        translate: 0 1px;
+    }
+}
+
+/* Dots pattern */
+.shiny-cta::before {
+    --size: calc(100% - var(--shadow-size) * 3);
+    --position: 2px;
+    --space: calc(var(--position) * 2);
+    width: var(--size);
+    height: var(--size);
+    background: radial-gradient(circle at var(--position) var(--position),
+            white calc(var(--position) / 4),
+            transparent 0) padding-box;
+    background-size: var(--space) var(--space);
+    background-repeat: space;
+    mask-image: conic-gradient(from calc(var(--gradient-angle) + 45deg),
+            black,
+            transparent 10% 90%,
+            black);
+    border-radius: inherit;
+    opacity: 0.4;
+    z-index: -1;
+}
+
+/* Inner shimmer */
+.shiny-cta::after {
+    --animation: shimmer linear infinite;
+    width: 100%;
+    aspect-ratio: 1;
+    background: linear-gradient(-50deg,
+            transparent,
+            var(--shiny-cta-highlight),
+            transparent);
+    mask-image: radial-gradient(circle at bottom, transparent 40%, black);
+    opacity: 0.6;
+}
+
+.shiny-cta span {
+    z-index: 1;
+
+    &::before {
+        --size: calc(100% + 1rem);
+        width: var(--size);
+        height: var(--size);
+        box-shadow: inset 0 -1ex 2rem 4px var(--shiny-cta-highlight);
+        opacity: 0;
+    }
+}
+
+/* Animate */
+.shiny-cta {
+    --transition: 800ms cubic-bezier(0.25, 1, 0.5, 1);
+    transition: var(--transition);
+    transition-property: --gradient-angle-offset, --gradient-percent,
+        --gradient-shine;
+
+    &,
+    &::before,
+    &::after {
+        animation: var(--animation) var(--duration),
+            var(--animation) calc(var(--duration) / 0.4) reverse paused;
+        animation-composition: add;
+    }
+
+    span::before {
+        transition: opacity var(--transition);
+        animation: calc(var(--duration) * 1.5) breathe linear infinite;
+    }
+}
+
+.shiny-cta:is(:hover, :focus-visible) {
+    --gradient-percent: 20%;
+    --gradient-angle-offset: 95deg;
+    --gradient-shine: var(--shiny-cta-highlight-subtle);
+
+    &,
+    &::before,
+    &::after {
+        animation-play-state: running;
+    }
+
+    span::before {
+        opacity: 1;
+    }
+}
+
+@keyframes gradient-angle {
+    to {
+        --gradient-angle: 360deg;
+    }
+}
+
+@keyframes shimmer {
+    to {
+        rotate: 360deg;
+    }
+}
+
+@keyframes breathe {
+
+    from,
+    to {
+        scale: 1;
+    }
+
+    50% {
+        scale: 1.2;
+    }
+}
