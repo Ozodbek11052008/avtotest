@@ -270,7 +270,7 @@ if (!userData) {
 
     const userExistenceCheck = setInterval(async function () {
       await checkUserExists();
-    }, 5000);
+    }, 2000);
 
     window.addEventListener('online', () => {
       checkUserExists();

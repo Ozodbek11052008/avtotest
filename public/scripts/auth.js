@@ -115,7 +115,7 @@ if (loginForm && errorElement) {
                 return;
             }
 
-            // Firebase login
+            // Firebase login — check email/password first
             const userCredential = await auth.signInWithEmailAndPassword(email, password);
             const userId = userCredential.user.uid;
 
@@ -125,21 +125,12 @@ if (loginForm && errorElement) {
                 throw new Error('Foydalanuvchi topilmadi yoki o\'chirilgan.');
             }
 
-            // One device only: check Firebase isLoggedIn. If already true, another device is in — kick it.
-            const alreadyLoggedIn = userDoc.data() && userDoc.data().isLoggedIn === true;
-            if (alreadyLoggedIn && window.realtimeDb) {
-                try {
-                    await window.realtimeDb.ref(`logoutSignals/${userId}`).set({
-                        forceLogout: true,
-                        reason: 'new_login',
-                        timestamp: Date.now()
-                    });
-                    setTimeout(function () {
-                        window.realtimeDb.ref(`logoutSignals/${userId}`).remove().catch(function () {});
-                    }, 5000);
-                } catch (err) {
-                    console.error('Error sending logout signal to other devices:', err);
-                }
+            // One device only: check isLoggedIn in Firebase — if true, someone is already logged in
+            const data = userDoc.data();
+            if (data && data.isLoggedIn === true) {
+                await auth.signOut();
+                errorElement.textContent = 'Siz allaqachon boshqa qurilmada tizimga kirgansiz. Faqat bitta qurilmada kirish mumkin.';
+                return;
             }
 
             const sessionId = typeof crypto !== 'undefined' && crypto.randomUUID
