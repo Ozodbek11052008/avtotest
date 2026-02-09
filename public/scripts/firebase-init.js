@@ -24,10 +24,10 @@ try {
   console.log("Firebase Realtime Database initialized");
 } catch (error) {
   console.error("Error initializing Realtime Database:", error);
-  // Try to initialize again after a delay
-  setTimeout(() => {
+  setTimeout(function () {
     try {
       realtimeDb = firebase.database();
+      window.realtimeDb = realtimeDb;
       console.log("Firebase Realtime Database initialized (retry)");
     } catch (retryError) {
       console.error("Failed to initialize Realtime Database after retry:", retryError);

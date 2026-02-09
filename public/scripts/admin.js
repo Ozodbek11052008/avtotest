@@ -110,16 +110,20 @@ if (getCookie('isAdmin') !== 'true') {
 
   function setupRealtimeListener() {
     if (!window.realtimeDb) {
-      setTimeout(setupRealtimeListener, 500);
+      setTimeout(setupRealtimeListener, 300);
       return;
     }
-
-    const activeUsersRef = window.realtimeDb.ref('activeUsers');
-    activeUsersRef.on('value', (snapshot) => {
-      const data = snapshot.val();
-      activeUsersMap = data || {};
-      renderLoadedUsers();
-    });
+    try {
+      const activeUsersRef = window.realtimeDb.ref('activeUsers');
+      activeUsersRef.on('value', function (snapshot) {
+        const data = snapshot.val();
+        activeUsersMap = data || {};
+        renderLoadedUsers();
+      });
+    } catch (err) {
+      console.error('Admin: Realtime DB listener error', err);
+      setTimeout(setupRealtimeListener, 500);
+    }
   }
 
   setupRealtimeListener();
