@@ -72,14 +72,47 @@ if (!userData) {
   window.location.href = '/login';
   // return; // We can't return from top-level, but the redirect will happen
 } else {
-  // 2. Show user info
-  const userEmailElement = document.getElementById('userEmail');
-  if (userEmailElement) {
-    userEmailElement.textContent = userData.email || 'Unknown';
-  }
+  (async function initUserPage() {
+    // One device only: require sessionId (set at login)
+    if (!userData.sessionId) {
+      clearAllUserData();
+      window.location.href = '/login';
+      return;
+    }
+    for (var i = 0; i < 50; i++) {
+      if (window.db) break;
+      await new Promise(function (r) { setTimeout(r, 100); });
+    }
+    if (!window.db) {
+      clearAllUserData();
+      window.location.href = '/login';
+      return;
+    }
+    try {
+      var doc = await db.collection('users').doc(userData.uid).get();
+      var data = doc.exists ? doc.data() : null;
+      var currentSessionId = data && data.currentSessionId;
+      if (currentSessionId !== userData.sessionId) {
+        clearAllUserData();
+        if (window.auth) await window.auth.signOut();
+        window.location.href = '/login';
+        return;
+      }
+    } catch (err) {
+      console.error('[USER] Session check error:', err);
+      clearAllUserData();
+      window.location.href = '/login';
+      return;
+    }
 
-  // 3. Set up WebSocket-like real-time connection for force logout
-  if (userData.uid) {
+    // 2. Show user info
+    var userEmailElement = document.getElementById('userEmail');
+    if (userEmailElement) {
+      userEmailElement.textContent = userData.email || 'Unknown';
+    }
+
+    // 3. Set up WebSocket-like real-time connection for force logout
+    if (userData.uid) {
     const userId = userData.uid;
 
     // Wait for Firebase Realtime Database to be ready
@@ -140,7 +173,7 @@ if (!userData) {
 
     setupUserPresence();
 
-    // Listen for force logout signals
+    // Listen for force logout signals (e.g. login from another device or admin delete)
     function setupLogoutListener() {
       if (!window.realtimeDb) {
         setTimeout(setupLogoutListener, 500);
@@ -149,8 +182,13 @@ if (!userData) {
 
       try {
         const logoutSignalRef = window.realtimeDb.ref(`logoutSignals/${userId}`);
-        logoutSignalRef.on('value', (snapshot) => {
-          const signal = snapshot.val();
+        var isFirstValue = true;
+        logoutSignalRef.on('value', function (snapshot) {
+          var signal = snapshot.val();
+          if (isFirstValue) {
+            isFirstValue = false;
+            return;
+          }
           if (signal && (signal.forceLogout === true || signal.deleted === true)) {
             console.log('Force logout/deleted signal received - clearing all data immediately');
 
@@ -163,10 +201,11 @@ if (!userData) {
             clearAllUserData();
 
             if (window.auth) {
-              window.auth.signOut().then(() => {
-                alert(signal.deleted ? 'Sizning hisobingiz o\'chirildi.' : 'Sessiya admin tomonidan yakunlandi.');
+              window.auth.signOut().then(function () {
+                var msg = signal.deleted ? 'Sizning hisobingiz o\'chirildi.' : (signal.reason === 'new_login' ? 'Siz boshqa qurilmada tizimga kirdingiz.' : 'Sessiya admin tomonidan yakunlandi.');
+                alert(msg);
                 window.location.href = '/login';
-              }).catch(() => {
+              }).catch(function () {
                 window.location.href = '/login';
               });
             } else {
@@ -183,12 +222,31 @@ if (!userData) {
 
     setupLogoutListener();
 
-    // 4. IMMEDIATE check on page load
+    // 4. IMMEDIATE check on page load + periodic session check (one device only)
+    async function checkSessionStillValid() {
+      if (!userData || !userData.uid || !userData.sessionId || !window.db) return true;
+      try {
+        var doc = await db.collection('users').doc(userData.uid).get();
+        var data = doc.exists ? doc.data() : null;
+        var currentSessionId = data && data.currentSessionId;
+        if (currentSessionId !== userData.sessionId) {
+          if (window.realtimeDb) window.realtimeDb.ref('activeUsers/' + userData.uid).remove();
+          clearAllUserData();
+          if (window.auth) await window.auth.signOut();
+          window.location.href = '/login';
+          return false;
+        }
+        return true;
+      } catch (e) {
+        return true;
+      }
+    }
+
     async function checkUserExists() {
       if (!userData || !userData.uid || !window.db) {
         return false;
       }
-
+      if (!(await checkSessionStillValid())) return false;
       try {
         const userDoc = await db.collection('users').doc(userData.uid).get();
         if (!userDoc.exists) {
@@ -210,7 +268,7 @@ if (!userData) {
 
     checkUserExists();
 
-    const userExistenceCheck = setInterval(async () => {
+    const userExistenceCheck = setInterval(async function () {
       await checkUserExists();
     }, 5000);
 
@@ -219,19 +277,24 @@ if (!userData) {
     });
   }
 
-  // 7. Logout
-  const logoutBtn = document.getElementById('logout');
+  // 7. Logout — set isLoggedIn false in Firebase so next login is allowed
+  var logoutBtn = document.getElementById('logout');
   if (logoutBtn) {
-    logoutBtn.addEventListener('click', () => {
-      if (userData && userData.uid && window.realtimeDb) {
-        window.realtimeDb.ref(`activeUsers/${userData.uid}`).remove();
+    logoutBtn.addEventListener('click', function () {
+      if (userData && userData.uid) {
+        if (window.realtimeDb) {
+          window.realtimeDb.ref('activeUsers/' + userData.uid).remove();
+        }
+        if (window.db) {
+          window.db.collection('users').doc(userData.uid).update({ isLoggedIn: false }).catch(function () {});
+        }
       }
 
       deleteCookie('user');
       if (window.auth) {
-        window.auth.signOut().then(() => {
+        window.auth.signOut().then(function () {
           window.location.href = '/login';
-        }).catch(error => {
+        }).catch(function () {
           window.location.href = '/login';
         });
       } else {
@@ -239,4 +302,5 @@ if (!userData) {
       }
     });
   }
+  })();
 }

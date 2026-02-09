@@ -2,7 +2,8 @@ import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   try {
-    const { text } = (await req.json()) as { text?: string };
+    const body = await req.json().catch(() => ({}));
+    const { text } = (body && typeof body === "object" ? body : {}) as { text?: string };
     if (!text || typeof text !== "string") {
       return NextResponse.json({ error: "Missing text" }, { status: 400 });
     }
@@ -12,8 +13,8 @@ export async function POST(req: Request) {
 
     if (!token || !chatId) {
       return NextResponse.json(
-        { error: "Server is missing TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID" },
-        { status: 500 }
+        { ok: false, skipped: true, reason: "Telegram not configured (set TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID)" },
+        { status: 200 }
       );
     }
 
@@ -24,12 +25,22 @@ export async function POST(req: Request) {
     });
 
     const bodyText = await tgRes.text();
-    return new NextResponse(bodyText, {
-      status: tgRes.status,
-      headers: { "Content-Type": "application/json; charset=utf-8" },
-    });
-  } catch (e: any) {
-    return NextResponse.json({ error: e?.message || "Unknown error" }, { status: 500 });
+    if (!tgRes.ok) {
+      return NextResponse.json(
+        { ok: false, error: "Telegram API error", details: bodyText },
+        { status: 502 }
+      );
+    }
+    let json: unknown;
+    try {
+      json = JSON.parse(bodyText);
+    } catch {
+      json = { result: bodyText };
+    }
+    return NextResponse.json(json);
+  } catch (e: unknown) {
+    const message = e instanceof Error ? e.message : "Unknown error";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
 

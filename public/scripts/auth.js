@@ -125,9 +125,31 @@ if (loginForm && errorElement) {
                 throw new Error('Foydalanuvchi topilmadi yoki o\'chirilgan.');
             }
 
+            // One device only: check Firebase isLoggedIn. If already true, another device is in — kick it.
+            const alreadyLoggedIn = userDoc.data() && userDoc.data().isLoggedIn === true;
+            if (alreadyLoggedIn && window.realtimeDb) {
+                try {
+                    await window.realtimeDb.ref(`logoutSignals/${userId}`).set({
+                        forceLogout: true,
+                        reason: 'new_login',
+                        timestamp: Date.now()
+                    });
+                    setTimeout(function () {
+                        window.realtimeDb.ref(`logoutSignals/${userId}`).remove().catch(function () {});
+                    }, 5000);
+                } catch (err) {
+                    console.error('Error sending logout signal to other devices:', err);
+                }
+            }
+
+            const sessionId = typeof crypto !== 'undefined' && crypto.randomUUID
+                ? crypto.randomUUID()
+                : 's' + Date.now() + '-' + Math.random().toString(36).slice(2);
+
             await db.collection('users').doc(userId).update({
                 isLoggedIn: true,
-                lastActive: firebase.firestore.FieldValue.serverTimestamp()
+                lastActive: firebase.firestore.FieldValue.serverTimestamp(),
+                currentSessionId: sessionId
             });
 
             if (window.realtimeDb) {
@@ -159,7 +181,8 @@ if (loginForm && errorElement) {
             const userData = {
                 email: userCredential.user.email,
                 uid: userCredential.user.uid,
-                status: status
+                status: status,
+                sessionId: sessionId
             };
             const userJson = JSON.stringify(userData);
             setCookie('user', userJson, status);

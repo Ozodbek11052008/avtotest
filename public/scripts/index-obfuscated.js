@@ -16,7 +16,7 @@ fetch('/upload-results.json').then(function(r) { return r.json(); }).then(functi
     }
 }).catch(function() { /* fallback to base URL */ });
 
-const LOGO_URL = 'https://res.cloudinary.com/da51nlisj/image/upload/v1770031395/ml_default/logo.png';
+const LOGO_URL = 'https://res.cloudinary.com/da51nlisj/image/upload/v1770655033/logo_e9wnfh.png';
 function getCloudinaryImageUrl(path) {
     const base = 'https://res.cloudinary.com/da51nlisj/image/upload/v1769705101/ml_default/';
     if (!path || typeof path !== 'string') return imageUrlMap['logo.png'] || LOGO_URL;

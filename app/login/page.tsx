@@ -101,7 +101,7 @@ export default function Login() {
             <div className="login-page">
                 <div className="login-card">
                     <div className="login-header">
-                        <img className="login-logo" src="/logo2.png" alt="Prava Izlab" />
+                        <img className="login-logo" src="https://res.cloudinary.com/da51nlisj/image/upload/v1770655033/logo_e9wnfh.png" alt="Prava Izlab" />
                         <span className="login-brand">Prava Izlab</span>
                     </div>
 
